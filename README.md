@@ -12,21 +12,6 @@ Obama approved Minecraft utility mod for Fabric 1.18.
 > Website: https://bleachhack.org/  
 > Discord: https://bleachhack.org/discord
 
-## Showcase
-<details>
- <summary>Images</summary>
-
- ![](https://res.bleachhack.org/images/ClickguiShowcase.jpg)
-
- ![](https://res.bleachhack.org/images/RenderShowcase.jpg)
-
-</details>
-
-## Installation
-### For normal people
-
-Follow the Instructions on the [download page](https://bleachhack.org/downloads.html).
-
 ### For (200 IQ) developers
 
 Download the branch with the version you want to work on.  
