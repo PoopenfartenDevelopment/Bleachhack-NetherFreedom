@@ -1,9 +1,9 @@
 
 # BleachHack
-![](https://img.shields.io/github/downloads/bleachdrinker420/BleachHack/total?style=flat-square)
-![](https://img.shields.io/tokei/lines/github/BleachDrinker420/BleachHack?style=flat-square)
-![](https://img.shields.io/github/languages/code-size/bleachdrinker420/BleachHack?style=flat-square)
-![](https://img.shields.io/github/last-commit/bleachdrinker420/BleachHack?style=flat-square)
+![](https://img.shields.io/github/downloads/RedCarlos26/Bleachhack-NetherFreedom/total?style=flat-square)
+![](https://img.shields.io/tokei/lines/github/RedCarlos26/Bleachhack-NetherFreedom?style=flat-square)
+![](https://img.shields.io/github/languages/code-size/RedCarlos26/Bleachhack-NetherFreedom?style=flat-square)
+![](https://img.shields.io/github/last-commit/RedCarlos26/Bleachhack-NetherFreedom?style=flat-square)
 ![](https://img.shields.io/badge/daily%20commit-yes-blue?style=flat-square)
 ![](https://img.shields.io/discord/620600892718055434?style=flat-square)
 
