@@ -7,10 +7,7 @@
 ![](https://img.shields.io/badge/daily%20commit-yes-blue?style=flat-square)
 ![](https://img.shields.io/discord/849789551810445363?style=flat-square)
 
-Obama approved Minecraft utility mod for Fabric 1.18.
-
-> Website: https://bleachhack.org/  
-> Discord: https://bleachhack.org/discord
+> Discord: https://discord.gg/u3XNcDZyrY
 
 ### For (200 IQ) developers
 
