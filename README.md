@@ -5,7 +5,7 @@
 ![](https://img.shields.io/github/languages/code-size/RedCarlos26/Bleachhack-NetherFreedom?style=flat-square)
 ![](https://img.shields.io/github/last-commit/RedCarlos26/Bleachhack-NetherFreedom?style=flat-square)
 ![](https://img.shields.io/badge/daily%20commit-yes-blue?style=flat-square)
-![](https://img.shields.io/discord/620600892718055434?style=flat-square)
+![](https://img.shields.io/discord/849789551810445363?style=flat-square)
 
 Obama approved Minecraft utility mod for Fabric 1.18.
 
