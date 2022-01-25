@@ -7,7 +7,7 @@
 ![](https://img.shields.io/badge/daily%20commit-yes-blue?style=flat-square)
 ![](https://img.shields.io/discord/849789551810445363?style=flat-square)
 
-> Discord: https://discord.gg/u3XNcDZyrY
+Discord: https://discord.gg/u3XNcDZyrY
 
 ### For (200 IQ) developers
 
