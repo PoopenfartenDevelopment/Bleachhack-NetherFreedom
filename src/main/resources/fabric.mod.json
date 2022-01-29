@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "bleachhack",
+  "id": "bleachhack-netherfreedom",
   "version": "${version}",
 
-  "name": "BleachHack",
+  "name": "BleachHack-NetherFreedom",
   "description": "gamer obama utility mod",
   "authors": [
-    "Bleach"
+    "Bleach",
+    "CUPZYY"
   ],
   "contact": {
-    "homepage": "https://bleachhack.org/",
-    "sources": "https://github.com/BleachDrinker420/BleachHack"
+    "sources": "https://github.com/RedCarlos26/Bleachhack-NetherFreedom"
   },
 
   "license": "CC0-1.0",

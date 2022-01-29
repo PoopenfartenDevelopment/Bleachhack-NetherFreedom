@@ -1,0 +1,31 @@
+name: build
+
+on:
+  push:
+    branches: [ 1.18.1 ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 16
+
+    - name: build 1.18.1
+      run: |
+        chmod +x gradlew
+        ./gradlew build
+        cd ..
+        
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: BH-NetherFreedom
+        path: build/libs/bleachhack-netherfreedom-1.0.jar
+    
+        
