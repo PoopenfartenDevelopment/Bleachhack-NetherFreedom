@@ -15,8 +15,6 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -42,7 +40,6 @@ import org.bleachhack.module.ModuleManager;
 import org.bleachhack.setting.module.SettingMode;
 import org.bleachhack.setting.module.SettingSlider;
 import org.bleachhack.setting.module.SettingToggle;
-import org.bleachhack.util.world.ClientChunkSerializer;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -70,14 +67,11 @@ public class UI extends Module {
 	private Text durabilityText = LiteralText.EMPTY;
 	private Text serverText = LiteralText.EMPTY;
 	private Text timestampText = LiteralText.EMPTY;
-	private Text chunksizeText = LiteralText.EMPTY;
 
 	private long prevTime = 0;
 	private double tps = 20;
 	private long lastPacket = 0;
 
-	private int chunkSize;
-	private long lastChunkTime;
 	private ExecutorService chunkExecutor;
 	private Pair<ChunkPos, Future<Integer>> chunkFuture;
 
@@ -100,8 +94,7 @@ public class UI extends Module {
 				new SettingToggle("Server", false).withDesc("Shows the current server you are on."),                                   // 6
 				new SettingToggle("Timestamp", false).withDesc("Shows the current time.").withChildren(                                // 7
 						new SettingToggle("TimeZone", true).withDesc("Shows your time zone in the time."),
-						new SettingToggle("Year", false).withDesc("Shows the current year in the time.")),
-				new SettingToggle("ChunkSize", false).withDesc("Shows the data size of the chunk you are standing in."),               // 8
+						new SettingToggle("Year", false).withDesc("Shows the current year in the time.")),// 8
 				new SettingToggle("Players", false).withDesc("Lists all the players in your render distance."),                        // 9
 				new SettingToggle("Armor", true).withDesc("Shows your current armor.").withChildren(                                   // 10
 						new SettingToggle("Vertical", false).withDesc("Displays your armor vertically."),
@@ -171,17 +164,10 @@ public class UI extends Module {
 						(ms, x, y) -> mc.textRenderer.drawWithShadow(ms, timestampText, x + 1, y + 1, 0xa0a0a0))
 				);
 
-		container.windows.put("chunksize",
-				new UIWindow(new Position(0.2, 0.75, "timestamp", 0), container,
-						() -> getSetting(8).asToggle().getState(),
-						() -> new int[] { mc.textRenderer.getWidth(chunksizeText) + 2, 10 },
-						(ms, x, y) -> mc.textRenderer.drawWithShadow(ms, chunksizeText, x + 1, y + 1, 0xa0a0a0))
-				);
-
 		// Players
 		container.windows.put("players",
 				new UIWindow(new Position("l", 1, "modulelist", 2), container,
-						() -> getSetting(9).asToggle().getState(),
+						() -> getSetting(8).asToggle().getState(),
 						this::getPlayerSize,
 						this::drawPlayerList)
 				);
@@ -189,7 +175,7 @@ public class UI extends Module {
 		// Armor
 		container.windows.put("armor",
 				new UIWindow(new Position(0.5, 0.85), container,
-						() -> getSetting(10).asToggle().getState(),
+						() -> getSetting(9).asToggle().getState(),
 						this::getArmorSize,
 						this::drawArmor)
 				);
@@ -197,7 +183,7 @@ public class UI extends Module {
 		// Lag-Meter
 		container.windows.put("lagmeter",
 				new UIWindow(new Position(0, 0.05, "c", 1), container,
-						() -> getSetting(11).asToggle().getState(),
+						() -> getSetting(10).asToggle().getState(),
 						this::getLagMeterSize,
 						this::drawLagMeter)
 				);
@@ -205,7 +191,7 @@ public class UI extends Module {
 		// Inventory
 		container.windows.put("inventory",
 				new UIWindow(new Position(0.7, 0.90), container,
-						() -> getSetting(12).asToggle().getState(),
+						() -> getSetting(11).asToggle().getState(),
 						this::getInventorySize,
 						this::drawInventory)
 				);
@@ -301,35 +287,6 @@ public class UI extends Module {
 
 		timestampText = new LiteralText("Time: ")
 				.append(new LiteralText(timeString).styled(s -> s.withColor(Formatting.YELLOW)));
-
-		// ChunkSize
-		if (chunkFuture != null && new ChunkPos(mc.player.getBlockPos()).equals(chunkFuture.getLeft())) {
-			if (chunkFuture.getRight().isDone()) {
-				try {
-					chunkSize = chunkFuture.getRight().get();
-				} catch (InterruptedException | ExecutionException e) {
-					e.printStackTrace();
-				}
-
-				chunkFuture = null;
-			}
-		} else if (System.currentTimeMillis() - lastChunkTime > 1500 && mc.world.getWorldChunk(mc.player.getBlockPos()) != null) {
-			lastChunkTime = System.currentTimeMillis();
-			chunkFuture = Pair.of(new ChunkPos(mc.player.getBlockPos()), chunkExecutor.submit(() -> {
-				try {
-					NbtCompound tag = ClientChunkSerializer.serialize(mc.world, mc.world.getWorldChunk(mc.player.getBlockPos()));
-					DataOutputStream output = new DataOutputStream(
-							new BufferedOutputStream(new DeflaterOutputStream(new ByteArrayOutputStream(8096))));
-					NbtIo.writeCompressed(tag, output);
-					return output.size();
-				} catch (Exception e) {
-					return 0;
-				}
-			}));
-		}
-
-		chunksizeText = new LiteralText("Chunk: ")
-				.append(new LiteralText(chunkSize < 1000 ? chunkSize + "B" : chunkSize / 1000d + "KB").styled(s -> s.withColor(Formatting.WHITE)));
 	}
 
 	@BleachSubscribe
@@ -443,7 +400,7 @@ public class UI extends Module {
 			String text = "Server Lagging For: " + String.format(Locale.ENGLISH, "%.2f", (time - lastPacket) / 1000d) + "s";
 
 			int xd = x + 72 - mc.textRenderer.getWidth(text) / 2;
-			switch (getSetting(11).asToggle().getChild(0).asMode().getMode()) {
+			switch (getSetting(10).asToggle().getChild(0).asMode().getMode()) {
 				case 0 -> mc.textRenderer.drawWithShadow(matrices, text, xd, y + 1 + Math.min((time - lastPacket - 1200) / 20, 0), 0xd0d0d0);
 				case 1 -> mc.textRenderer.drawWithShadow(matrices, text, xd, y + 1,
 						(MathHelper.clamp((int) (time - lastPacket - 500) / 3, 5, 255) << 24) | 0xd0d0d0);
@@ -455,12 +412,12 @@ public class UI extends Module {
 	// --- Armor
 
 	public int[] getArmorSize() {
-		boolean vertical = getSetting(10).asToggle().getChild(0).asToggle().getState();
+		boolean vertical = getSetting(9).asToggle().getChild(0).asToggle().getState();
 		return new int[] { vertical ? 18 : 74, vertical ? 62 : 16 };
 	}
 
 	public void drawArmor(MatrixStack matrices, int x, int y) {
-		boolean vertical = getSetting(10).asToggle().getChild(0).asToggle().getState();
+		boolean vertical = getSetting(9).asToggle().getChild(0).asToggle().getState();
 
 		for (int count = 0; count < mc.player.getInventory().armor.size(); count++) {
 			ItemStack is = mc.player.getInventory().armor.get(count);
@@ -490,7 +447,7 @@ public class UI extends Module {
 			}
 
 			if (is.isDamageable()) {
-				int mode = getSetting(10).asToggle().getChild(1).asMode().getMode();
+				int mode = getSetting(9).asToggle().getChild(1).asMode().getMode();
 				if (mode == 0) {
 					matrices.push();
 					matrices.scale(0.75f, 0.75f, 1f);
@@ -522,9 +479,9 @@ public class UI extends Module {
 	}
 
 	public void drawInventory(MatrixStack matrices, int x, int y) {
-		if (getSetting(12).asToggle().getState()) {
+		if (getSetting(11).asToggle().getState()) {
 			DrawableHelper.fill(matrices, x + 155, y, x, y + 53,
-					(getSetting(12).asToggle().getChild(0).asSlider().getValueInt() << 24) | 0x212120);
+					(getSetting(11).asToggle().getChild(0).asSlider().getValueInt() << 24) | 0x212120);
 
 			matrices.push();
 			for (int i = 0; i < 27; i++) {

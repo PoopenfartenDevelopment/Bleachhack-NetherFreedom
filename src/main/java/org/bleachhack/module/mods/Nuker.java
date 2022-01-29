@@ -89,21 +89,6 @@ public class Nuker extends Module {
 
 		ImmutablePairList<BlockPos, Pair<Vec3d, Direction>> blocks = new ImmutablePairList<>();
 
-		if (getSetting(7).asToggle().getChild(0).asToggle().getState()) {
-			if ((mc.player.forwardSpeed != 0 || mc.player.sidewaysSpeed != 0)) {
-				if (!mc.player.isSprinting()) {
-					mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SPRINTING));
-				}
-
-				if(!mc.world.getBlockState(mc.player.getBlockPos().up(2)).getMaterial().isReplaceable()
-						&& mc.player.getHungerManager().getFoodLevel() > 7){
-					mc.player.setVelocity(new Vec3d(0, mc.player.getVelocity().y, 0));
-					mc.player.updateVelocity(getSetting(7).asToggle().getChild(0).asToggle().getChild(0).asSlider().getValueFloat(),
-							new Vec3d(mc.player.sidewaysSpeed, 0, mc.player.forwardSpeed));
-				}
-			}
-		}
-
 		// Add blocks around player
 		SettingToggle filterToggler = getSetting(6).asToggle();
 		for (int x = MathHelper.ceil(range); x >= MathHelper.floor(-range); x--) {
@@ -160,14 +145,12 @@ public class Nuker extends Module {
 				WorldUtils.facePosAuto(v.x, v.y, v.z, getSetting(9).asRotate());
 			}
 
-			renderBlocks.add(pos.getKey());
-
 			if(!(mc.player.getMainHandStack().getItem() instanceof PickaxeItem) && getSetting(10).asToggle().getState()){
 				return;
 			}
 
 			mc.interactionManager.updateBlockBreakingProgress(pos.getKey(), pos.getValue().getRight());
-
+			renderBlocks.add(pos.getKey());
 			mc.player.swingHand(Hand.MAIN_HAND);
 
 			broken++;
