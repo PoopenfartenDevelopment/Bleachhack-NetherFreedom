@@ -13,6 +13,8 @@ import org.bleachhack.eventbus.BleachSubscribe;
 import org.bleachhack.gui.clickgui.ModuleClickGuiScreen;
 import org.bleachhack.module.Module;
 import org.bleachhack.module.ModuleCategory;
+import org.bleachhack.setting.module.SettingColor;
+import org.bleachhack.setting.module.SettingMode;
 import org.bleachhack.setting.module.SettingSlider;
 import org.bleachhack.setting.module.SettingToggle;
 import org.lwjgl.glfw.GLFW;
@@ -21,9 +23,15 @@ public class ClickGui extends Module {
 
 	public ClickGui() {
 		super("ClickGui", GLFW.GLFW_KEY_RIGHT_SHIFT, ModuleCategory.RENDER, "Draws the clickgui.",
-				new SettingSlider("Length", 70, 85, 75, 0).withDesc("The length of each window."),
-				new SettingToggle("Search bar", true).withDesc("Shows a search bar."),
-				new SettingToggle("Help", true).withDesc("Shows the help text."));
+				new SettingSlider("Length", 70, 85, 80, 0).withDesc("The length of each window"),
+				new SettingToggle("Search bar", true).withDesc("Shows a search bar"),
+				new SettingToggle("Help", true).withDesc("Shows the help text"),
+				new SettingToggle("Round", true).withDesc("Rounded corners"),
+				new SettingToggle("Rainbow", false).withDesc("Rainbow gui").withChildren(
+						new SettingSlider("Speed", 1, 50, 15, 0).withDesc("How fast the colors are changing")
+				),
+				new SettingColor("Color", 85, 255, 85),
+				new SettingMode("Theme", "Wire", "SalHackSkid", "Clear", "Full"));
 	}
 
 	@Override

@@ -17,6 +17,9 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
+import org.bleachhack.module.ModuleManager;
+import org.bleachhack.module.mods.ClickGui;
+import org.bleachhack.module.mods.UI;
 
 public abstract class ClickGuiWindow extends Window {
 
@@ -41,21 +44,97 @@ public abstract class ClickGuiWindow extends Window {
 		return false;
 	}
 
-	protected void drawBackground(MatrixStack matrices, int mouseX, int mouseY, TextRenderer textRend) {
+	protected void drawBackground(MatrixStack matrix, int mouseX, int mouseY, TextRenderer textRend) {
 		/* background */
-		DrawableHelper.fill(matrices, x1, y1 + 1, x1 + 1, y2 - 1, 0xff6060b0);
-		horizontalGradient(matrices, x1 + 1, y1, x2 - 1, y1 + 1, 0xff6060b0, 0xff8070b0);
-		DrawableHelper.fill(matrices, x2 - 1, y1 + 1, x2, y2 - 1, 0xff8070b0);
-		horizontalGradient(matrices, x1 + 1, y2 - 1, x2 - 1, y2, 0xff6060b0, 0xff8070b0);
-
-		DrawableHelper.fill(matrices, x1 + 1, y1 + 12, x2 - 1, y2 - 1, 0x90606090);
-
-		/* title bar */
-		horizontalGradient(matrices, x1 + 1, y1 + 1, x2 - 1, y1 + 12, 0xff6060b0, 0xff8070b0);
-
-		/* +/- text */
-		textRend.draw(matrices, hiding ? "+" : "_", x2 - 10, y1 + (hiding ? 4 : 2), 0x000000);
-		textRend.draw(matrices, hiding ? "+" : "_", x2 - 11, y1 + (hiding ? 3 : 1), 0xffffff);
+		// Upper line
+		ClickGui clickGUI = (ClickGui) ModuleManager.getModule("ClickGui");
+		boolean round = clickGUI.getSetting(3).asToggle().getState();
+		boolean rainbow = clickGUI.getSetting(4).asToggle().getState();
+		int rainbowSpeed = clickGUI.getSetting(4).asToggle().getChild(0).asSlider().getValueInt();
+		int rgb = clickGUI.getSetting(5).asColor().getRGB();
+		int colorFF = 0xff000000 | rgb;
+		int color26 = 0x26000000 | rgb;
+		int rainbowFF = UI.getRainbow(0.5f, 1, (80) - (rainbowSpeed + 29), 0);
+		int rainbow26 = (UI.getRainbow(0.5f, 1, (80) - (rainbowSpeed + 29), 0) & 0x00FFFFFF) | 0x26000000;
+		switch (ModuleManager.getModule("ClickGui").getSetting(6).asMode().getMode()) {
+			case 0:
+				if (round) {
+					DrawableHelper.fill(matrix, x1, y1 + 1, x1 + 1, y2 - 1, !rainbow ? colorFF : rainbowFF);
+				} else {
+					DrawableHelper.fill(matrix, x1, y1, x1 + 1, y2, !rainbow ? colorFF : rainbowFF);
+				}
+				// Line below category title
+				DrawableHelper.fill(matrix, x1 + 1, y1 + 12, x2 - 1, !hiding ? y1 + 13 : y1 + 12, !rainbow ? colorFF : rainbowFF);
+				// Fullfill | DrawableHelper.fill(matrix, x1 + 1, y1 + 12, x2 - 1, y1 + 1, 0xff55FF55);
+				// lines on the sides
+				DrawableHelper.fill(matrix, x1 + 1, y1, x2 - 1, y1 + 1, !rainbow ? colorFF : rainbowFF);
+				if (round) {
+					DrawableHelper.fill(matrix, x2 - 1, y1 + 1, x2, y2 - 1, !rainbow ? colorFF : rainbowFF);
+				} else {
+					DrawableHelper.fill(matrix, x2 - 1, y1, x2, y2, !rainbow ? colorFF : rainbowFF);
+				}
+				// Bottom line
+				DrawableHelper.fill(matrix, x1 + 1, y2 - 1, x2 - 1, y2, !rainbow ? colorFF : rainbowFF);
+				break;
+			case 1:
+				if (round) {
+					DrawableHelper.fill(matrix, x1, y1 + 1, x1 + 1, y2 - 1, !rainbow ? colorFF : rainbowFF);
+				} else {
+					DrawableHelper.fill(matrix, x1, y1, x1 + 1, y2, !rainbow ? colorFF : rainbowFF);
+				}
+				// Line below category title
+				DrawableHelper.fill(matrix, x1 + 1, y1, x2 - 1, !hiding ? y1 + 13 : y1 + 12, !rainbow ? colorFF : rainbowFF);
+				// DrawableHelper.fill(matrix, x1 + 1, y1 + 12, x2 - 1, y1 + 1, 0xff55FF55);
+				DrawableHelper.fill(matrix, x1 + 1, y1 + 12, x2 - 1, y2 - 1, !rainbow ? color26 : rainbow26);
+				// lines on the sides
+				DrawableHelper.fill(matrix, x1 + 1, y1, x2 - 1, y1 + 1, !rainbow ? colorFF : rainbowFF);
+				if (round) {
+					DrawableHelper.fill(matrix, x2 - 1, y1 + 1, x2, y2 - 1, !rainbow ? colorFF : rainbowFF);
+				} else {
+					DrawableHelper.fill(matrix, x2 - 1, y1, x2, y2, !rainbow ? colorFF : rainbowFF);
+				}
+				DrawableHelper.fill(matrix, x1 + 1, y2 - 1, x2 - 1, y2, !rainbow ? colorFF : rainbowFF);
+				break;
+			case 2:
+				if (round) {
+					DrawableHelper.fill(matrix, x1, y1 + 1, x1 + 1, y2 - 1, !rainbow ? colorFF : rainbowFF);
+				} else {
+					DrawableHelper.fill(matrix, x1, y1, x1 + 1, y2, !rainbow ? colorFF : rainbowFF);
+				}
+				// Line below category title
+				// Fullfill | DrawableHelper.fill(matrix, x1 + 1, y1 + 12, x2 - 1, y1 + 1, 0xff55FF55);
+				// lines on the sides
+				DrawableHelper.fill(matrix, x1 + 1, y1, x2 - 1, y1 + 1, !rainbow ? colorFF : rainbowFF);
+				if (round) {
+					DrawableHelper.fill(matrix, x2 - 1, y1 + 1, x2, y2 - 1, !rainbow ? colorFF : rainbowFF);
+				} else {
+					DrawableHelper.fill(matrix, x2 - 1, y1, x2, y2, !rainbow ? colorFF : rainbowFF);
+				}
+				// Bottom line
+				DrawableHelper.fill(matrix, x1 + 1, y2 - 1, x2 - 1, y2, !rainbow ? colorFF : rainbowFF);
+				break;
+			case 3:
+				if (round) {
+					DrawableHelper.fill(matrix, x1, y1 + 1, x1 + 1, y2 - 1, !rainbow ? colorFF : rainbowFF);
+				} else {
+					DrawableHelper.fill(matrix, x1, y1, x1 + 1, y2, !rainbow ? colorFF : rainbowFF);
+				}
+				// Line below category title
+				// DrawableHelper.fill(matrix, x1 + 1, y1, x2 - 1, !hiding ? y1 + 13 : y1 + 12, 0xff55FF55);
+				// DrawableHelper.fill(matrix, x1 + 1, y1 + 12, x2 - 1, y1 + 1, 0xff55FF55);
+				DrawableHelper.fill(matrix, x1 + 1, y1, x2 - 1, y2 - 1, !rainbow ? color26 : rainbow26);
+				// lines on the sides
+				DrawableHelper.fill(matrix, x1 + 1, y1, x2 - 1, y1 + 1, !rainbow ? colorFF : rainbowFF);
+				if (round) {
+					DrawableHelper.fill(matrix, x2 - 1, y1 + 1, x2, y2 - 1, !rainbow ? colorFF : rainbowFF);
+				} else {
+					DrawableHelper.fill(matrix, x2 - 1, y1, x2, y2, !rainbow ? colorFF : rainbowFF);
+				}
+				DrawableHelper.fill(matrix, x1 + 1, y2 - 1, x2 - 1, y2, !rainbow ? colorFF : rainbowFF);
+				break;
+		}
+		textRend.draw(matrix, hiding ? "+" : "_", x2 - 10, y1 + (hiding ? 4 : 2), 0x000000);
+		textRend.draw(matrix, hiding ? "+" : "_", x2 - 11, y1 + (hiding ? 3 : 1), 0xffffff);
 	}
 
 	public void render(MatrixStack matrices, int mouseX, int mouseY) {

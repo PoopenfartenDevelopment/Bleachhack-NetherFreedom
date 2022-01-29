@@ -17,15 +17,15 @@ public class Watermark {
 	private String text2;
 	private int color1;
 	private int color2;
-	
+
 	public Watermark() {
 		reset(true, true);
 	}
 
 	public void reset(boolean strings, boolean colors) {
 		if (strings) {
-			text1 = "Bleach";
-			text2 = "Hack";
+			text1 = "BleachHack-NetherFreedom";
+			text2 = "";
 		}
 
 		if (colors) {
@@ -34,18 +34,6 @@ public class Watermark {
 		}
 	}
 
-	public String getString1() {
-		return text1;
-	}
-
-	public String getString2() {
-		return text2;
-	}
-
-	public void setStrings(String text1, String text2) {
-		this.text1 = text1;
-		this.text2 = text2;
-	}
 
 	public int getColor1() {
 		return color1;
@@ -66,10 +54,6 @@ public class Watermark {
 	}
 
 	public MutableText getShortText() {
-		if (text2.isEmpty()) {
-			return new LiteralText(text1.substring(0, 2)).styled(s -> s.withColor(color1));
-		} else {
-			return new LiteralText(text1.substring(0, 1)).styled(s -> s.withColor(color1)).append(new LiteralText(text2.substring(0, 1)).styled(s -> s.withColor(color2)));
-		}
+		return new LiteralText("BH").styled(s -> s.withColor(color1));
 	}
 }

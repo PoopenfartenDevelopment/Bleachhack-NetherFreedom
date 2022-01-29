@@ -9,24 +9,19 @@
 package org.bleachhack.mixin;
 
 import org.apache.commons.lang3.tuple.Triple;
-import org.bleachhack.BleachHack;
 import org.bleachhack.gui.AccountManagerScreen;
 import org.bleachhack.gui.BleachCreditsScreen;
 import org.bleachhack.gui.BleachOptionsScreen;
 import org.bleachhack.gui.BleachTitleScreen;
-import org.bleachhack.gui.UpdateScreen;
 import org.bleachhack.gui.clickgui.ModuleClickGuiScreen;
 import org.bleachhack.gui.window.WindowManagerScreen;
 import org.bleachhack.module.ModuleManager;
-import org.bleachhack.setting.option.Option;
 import org.bleachhack.util.io.BleachFileHelper;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.minecraft.client.MinecraftClient;
@@ -40,26 +35,12 @@ import net.minecraft.text.Text;
 
 @Mixin(TitleScreen.class)
 public class MixinTitleScreen extends Screen {
-
-	@Unique private static boolean firstLoad = true;
-
 	private MixinTitleScreen(Text title) {
 		super(title);
 	}
 
 	@Inject(method = "init()V", at = @At("HEAD"))
 	private void init(CallbackInfo info) {
-		if (firstLoad) {
-			if (Option.GENERAL_SHOW_UPDATE_SCREEN.getValue()) {
-				JsonObject updateJson = BleachHack.getUpdateJson();
-				if (updateJson != null && updateJson.has("version") && updateJson.get("version").getAsInt() > BleachHack.INTVERSION)
-					client.setScreen(new UpdateScreen(null, updateJson));
-			}
-
-			firstLoad = false;
-			return;
-		}
-
 		if (BleachTitleScreen.customTitleScreen) {
 			MinecraftClient.getInstance().setScreen(
 					new WindowManagerScreen(

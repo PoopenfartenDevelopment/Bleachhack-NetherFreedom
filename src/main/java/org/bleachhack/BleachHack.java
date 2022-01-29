@@ -120,12 +120,4 @@ public class BleachHack implements ModInitializer {
 
 		BleachLogger.logger.log(Level.INFO, "Loaded BleachHack (Phase 2) in %d ms.", System.currentTimeMillis() - initStartTime);
 	}
-
-	public static JsonObject getUpdateJson() {
-		try {
-			return updateJson.get();
-		} catch (Exception e) {
-			return null;
-		}
-	}
 }
