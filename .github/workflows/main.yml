@@ -26,6 +26,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: BH-NetherFreedom
-        path: build/libs/bleachhack-netherfreedom-1.0.jar
+        path: build/libs/bleachhack-netherfreedom-1.1.jar
     
         
