@@ -20,6 +20,7 @@ import org.bleachhack.event.events.EventWorldRender;
 import org.bleachhack.eventbus.BleachSubscribe;
 import org.bleachhack.module.Module;
 import org.bleachhack.module.ModuleCategory;
+import org.bleachhack.module.ModuleManager;
 import org.bleachhack.setting.module.*;
 import org.bleachhack.util.InventoryUtils;
 import org.bleachhack.util.io.BleachFileHelper;
@@ -33,13 +34,6 @@ import java.util.Set;
 public class Scaffold extends Module {
 
 	private Set<BlockPos> renderBlocks = new LinkedHashSet<>();
-
-	private static Runnable runnable =
-			() -> {
-				JsonArray json = new JsonArray();
-				json.add(mc.player.getPos().getY());
-				BleachFileHelper.saveMiscSetting("scaffoldYLock", json);
-			};
 
 	public Scaffold() {
 		super("Scaffold", KEY_UNBOUND, ModuleCategory.WORLD, "Places blocks under you",
@@ -56,7 +50,7 @@ public class Scaffold extends Module {
 				new SettingToggle("AirPlace", false).withDesc("Places blocks in the air without support blocks."),
 				new SettingToggle("SafeWalk", true).withDesc("Prevents you from walking of edges when scaffold is on."),
 				new SettingToggle("Y-Lock", false).withDesc("Only places blocks on a specific Y level.").withChildren(
-						new SettingButton("Set Y", runnable)),
+						new SettingToggle("Set Y", false)),
 				new SettingToggle("NoSwing", false).withDesc("Doesn't swing your hand clientside."),
 				new SettingToggle("EmptyToggle", false).withDesc("Turns off when you run out of blocks."),
 				new SettingToggle("Highlight", false).withDesc("Highlights the blocks you are placing.").withChildren(

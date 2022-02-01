@@ -8,15 +8,19 @@
  */
 package org.bleachhack.module.mods;
 
+import com.google.gson.JsonArray;
 import org.bleachhack.event.events.EventOpenScreen;
+import org.bleachhack.event.events.EventTick;
 import org.bleachhack.eventbus.BleachSubscribe;
 import org.bleachhack.gui.clickgui.ModuleClickGuiScreen;
 import org.bleachhack.module.Module;
 import org.bleachhack.module.ModuleCategory;
+import org.bleachhack.module.ModuleManager;
 import org.bleachhack.setting.module.SettingColor;
 import org.bleachhack.setting.module.SettingMode;
 import org.bleachhack.setting.module.SettingSlider;
 import org.bleachhack.setting.module.SettingToggle;
+import org.bleachhack.util.io.BleachFileHelper;
 import org.lwjgl.glfw.GLFW;
 
 public class ClickGui extends Module {
@@ -54,5 +58,17 @@ public class ClickGui extends Module {
 		if (event.getScreen() == null) {
 			setEnabled(false);
 		}
+	}
+
+	@BleachSubscribe
+	public void onTick(EventTick event) {
+		Module module = ModuleManager.getModule("Scaffold");
+		if ((module.getSetting(9).asToggle().getChild(0).asToggle().getState()) && (mc.player != null)){
+			JsonArray json = new JsonArray();
+			json.add(mc.player.getPos().getY());
+			BleachFileHelper.saveMiscSetting("scaffoldYLock", json);
+			module.getSetting(9).asToggle().getChild(0).asToggle().setValue(false);
+		}
+
 	}
 }

@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.item.PickaxeItem;
-import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bleachhack.event.events.EventBlockBreakCooldown;
@@ -27,7 +26,6 @@ import org.bleachhack.setting.module.*;
 import org.bleachhack.util.Boxes;
 import org.bleachhack.util.collections.ImmutablePairList;
 import org.bleachhack.util.render.Renderer;
-import org.bleachhack.util.render.color.LineColor;
 import org.bleachhack.util.render.color.QuadColor;
 import org.bleachhack.util.world.WorldUtils;
 
@@ -59,9 +57,7 @@ public class Nuker extends Module {
 						new SettingMode("Mode", "Blacklist", "Whitelist").withDesc("How to handle the list."),
 						new SettingBlockList("Edit Blocks", "Edit Filtered Blocks").withDesc("Edit the filtered blocks.")),
 				new SettingToggle("Raycast", true).withDesc("Only mines blocks you can see."),
-				new SettingToggle("Flatten", true).withDesc("Flatten the area around you.").withChildren(
-						new SettingToggle("Speedy", false).withDesc("Bypasses ecme anticheat and allows you to go really fast").withChildren(
-								new SettingSlider("Speed", 0.15, 1, 0.27, 2).withDesc("Speed"))),
+				new SettingToggle("Flatten", true).withDesc("Flatten the area around you."),
 				new SettingRotate(false).withDesc("Rotate to blocks that you're mining."),
 				new SettingToggle("Pick Only", false).withDesc("Only allows pickaxe for mining."),
 				new SettingToggle("NoParticles", true).withDesc("Removes block breaking particles."),
