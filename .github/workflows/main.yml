@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [ 1.18.1 ]
+    branches: [ 1.18.2 ]
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
       with:
         java-version: 17
 
-    - name: build 1.18.1
+    - name: build 1.18.2
       run: |
         chmod +x gradlew
         ./gradlew build
@@ -26,6 +26,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: BH-NetherFreedom
-        path: build/libs/bleachhack-netherfreedom-1.1.jar
+        path: build/libs/bleachhack-netherfreedom-1.2.jar
     
         
